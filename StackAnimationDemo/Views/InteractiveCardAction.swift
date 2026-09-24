@@ -6,15 +6,11 @@ struct InteractiveCardAction: View {
     let tint: Color
     let direction: SwipeDirection
     let swipeState: SwipeInteractionState
-    let distanceToCenter: CGFloat
     let action: () -> Void
-
-    @Environment(\.layoutDirection) private var layoutDirection
 
     var body: some View {
         CardActionButton(title: title, systemImage: systemImage, tint: tint, action: action)
             .scaleEffect(scale)
-            .offset(x: horizontalOffset, y: -10 * selectedProgress)
             .opacity(opacity)
             .shadow(color: tint.opacity(Double(selectedProgress) * 0.3), radius: 12 * selectedProgress)
             .animation(
@@ -39,17 +35,7 @@ struct InteractiveCardAction: View {
     }
 
     private var scale: CGFloat {
-        isSelected ? 1 + selectedProgress * 0.28 : 1 - swipeState.interaction.progress * 0.12
-    }
-
-    private var horizontalOffset: CGFloat {
-        let offset: CGFloat
-        switch direction {
-        case .left: offset = distanceToCenter * selectedProgress
-        case .right: offset = -distanceToCenter * selectedProgress
-        case .up: offset = 0
-        }
-        return layoutDirection == .rightToLeft ? -offset : offset
+        isSelected ? 1 + selectedProgress * 0.28 : 1
     }
 
     private var opacity: Double {

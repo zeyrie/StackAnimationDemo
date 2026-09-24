@@ -19,7 +19,6 @@ struct CardControlsView: View {
                     tint: .pink,
                     direction: .left,
                     swipeState: swipeState,
-                    distanceToCenter: buttonWidth + buttonSpacing,
                     action: onPass
                 )
                 .frame(width: buttonWidth)
@@ -29,7 +28,6 @@ struct CardControlsView: View {
                     tint: .cyan,
                     direction: .up,
                     swipeState: swipeState,
-                    distanceToCenter: buttonWidth + buttonSpacing,
                     action: onSave
                 )
                 .frame(width: buttonWidth)
@@ -39,7 +37,6 @@ struct CardControlsView: View {
                     tint: .green,
                     direction: .right,
                     swipeState: swipeState,
-                    distanceToCenter: buttonWidth + buttonSpacing,
                     action: onLike
                 )
                 .frame(width: buttonWidth)
