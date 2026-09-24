@@ -2,8 +2,6 @@ import SwiftUI
 
 struct DemoCardView: View {
     let card: DemoCard
-    let activeDirection: SwipeDirection?
-    let indicatorOpacity: Double
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
@@ -29,11 +27,6 @@ struct DemoCardView: View {
                 title: card.title,
                 subtitle: card.subtitle,
                 category: card.category
-            )
-
-            SwipeDirectionIndicatorView(
-                direction: activeDirection,
-                opacity: indicatorOpacity
             )
         }
         .clipShape(.rect(cornerRadius: 32))
@@ -69,49 +62,5 @@ private struct DemoCardDetailsView: View {
                 .lineLimit(2)
         }
         .padding(28)
-    }
-}
-
-private struct SwipeDirectionIndicatorView: View {
-    let direction: SwipeDirection?
-    let opacity: Double
-
-    var body: some View {
-        ZStack {
-            if let direction {
-                VStack {
-                    if direction != .up {
-                        Spacer()
-                    }
-
-                    HStack {
-                        if direction == .right {
-                            Spacer()
-                        }
-
-                        Label(direction.label, systemImage: direction.symbol)
-                            .font(.title3.bold())
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 10)
-                            .foregroundStyle(direction.color)
-                            .background(.black.opacity(0.35), in: Capsule())
-                            .overlay {
-                                Capsule()
-                                    .stroke(direction.color, lineWidth: 2)
-                            }
-
-                        if direction == .left {
-                            Spacer()
-                        }
-                    }
-
-                    if direction == .up {
-                        Spacer()
-                    }
-                }
-                .padding(24)
-                .opacity(opacity)
-            }
-        }
     }
 }

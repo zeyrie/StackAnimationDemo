@@ -5,6 +5,13 @@ struct DismissRequest: Equatable {
     let direction: SwipeDirection
 }
 
+struct SwipeInteraction: Equatable {
+    let direction: SwipeDirection?
+    let progress: CGFloat
+
+    static let inactive = SwipeInteraction(direction: nil, progress: 0)
+}
+
 enum SwipeDirection {
     case left
     case right

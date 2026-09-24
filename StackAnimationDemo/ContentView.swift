@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var cards = DemoCard.samples
     @State private var dismissRequest: DismissRequest?
+    @State private var swipeState = SwipeInteractionState()
 
     var body: some View {
         ZStack {
@@ -14,12 +15,14 @@ struct ContentView: View {
                 CardStackView(
                     cards: cards,
                     dismissRequest: dismissRequest,
+                    swipeState: swipeState,
                     onDismiss: cardDismissed,
                     onReset: resetButtonTapped
                 )
 
                 CardControlsView(
                     isDisabled: cards.isEmpty || dismissRequest != nil,
+                    swipeState: swipeState,
                     onPass: { requestDismissal(.left) },
                     onSave: { requestDismissal(.up) },
                     onLike: { requestDismissal(.right) }
@@ -39,6 +42,7 @@ struct ContentView: View {
     private func cardDismissed(_ direction: SwipeDirection) {
         guard !cards.isEmpty else { return }
         dismissRequest = nil
+        swipeState.interaction = .inactive
 
         withAnimation(.spring(duration: 0.5, bounce: 0.2)) {
             _ = cards.removeFirst()

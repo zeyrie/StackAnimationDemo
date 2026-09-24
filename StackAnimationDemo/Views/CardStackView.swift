@@ -3,6 +3,7 @@ import SwiftUI
 struct CardStackView: View {
     let cards: [DemoCard]
     let dismissRequest: DismissRequest?
+    let swipeState: SwipeInteractionState
     let onDismiss: (SwipeDirection) -> Void
     let onReset: () -> Void
 
@@ -23,6 +24,7 @@ struct CardStackView: View {
                             stackPosition: index,
                             containerSize: proxy.size,
                             dismissRequest: index == 0 ? dismissRequest : nil,
+                            swipeState: swipeState,
                             onDismiss: onDismiss
                         )
                         .zIndex(Double(cards.count - index))
