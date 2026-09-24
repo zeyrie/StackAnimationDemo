@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var cards = DemoCard.samples
     @State private var dismissRequest: DismissRequest?
     @State private var swipeState = SwipeInteractionState()
@@ -42,15 +43,15 @@ struct ContentView: View {
     private func cardDismissed(_ direction: SwipeDirection) {
         guard !cards.isEmpty else { return }
         dismissRequest = nil
-        swipeState.interaction = .inactive
 
-        withAnimation(.spring(duration: 0.5, bounce: 0.2)) {
+        withAnimation(CardMotion.deckAdvance(reduceMotion: reduceMotion)) {
+            swipeState.interaction = .inactive
             _ = cards.removeFirst()
         }
     }
 
     private func resetButtonTapped() {
-        withAnimation(.spring(duration: 0.55, bounce: 0.22)) {
+        withAnimation(CardMotion.reset(reduceMotion: reduceMotion)) {
             cards = DemoCard.samples
         }
     }
