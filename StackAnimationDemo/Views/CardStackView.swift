@@ -2,9 +2,11 @@ import SwiftUI
 
 struct CardStackView: View {
     let cards: [DemoCard]
+    let departingCards: [DepartingCard]
     let dismissRequest: DismissRequest?
     let swipeState: SwipeInteractionState
-    let onDismiss: (SwipeDirection) -> Void
+    let onCommit: (DemoCard.ID, SwipeDirection, CGSize) -> Void
+    let onFlightFinished: (DepartingCard.ID) -> Void
     let onReset: () -> Void
 
     var body: some View {
@@ -22,14 +24,25 @@ struct CardStackView: View {
                             card: card,
                             isTopCard: index == 0,
                             stackPosition: index,
-                            containerSize: proxy.size,
                             dismissRequest: index == 0 ? dismissRequest : nil,
                             swipeState: swipeState,
-                            onDismiss: onDismiss
+                            onCommit: { direction, translation in
+                                onCommit(card.id, direction, translation)
+                            }
                         )
                         .transition(.asymmetric(insertion: .opacity, removal: .identity))
                         .zIndex(Double(cards.count - index))
                     }
+                }
+
+                ForEach(Array(departingCards.enumerated()), id: \.element.id) { index, departure in
+                    DepartingCardView(
+                        departure: departure,
+                        containerSize: proxy.size,
+                        onFinished: onFlightFinished
+                    )
+                    .transition(.identity)
+                    .zIndex(Double(100 + index))
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

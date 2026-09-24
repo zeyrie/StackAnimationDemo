@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var cards = DemoCard.samples
+    @State private var departingCards: [DepartingCard] = []
     @State private var dismissRequest: DismissRequest?
     @State private var swipeState = SwipeInteractionState()
 
@@ -14,9 +15,11 @@ struct ContentView: View {
 
                 CardStackView(
                     cards: cards,
+                    departingCards: departingCards,
                     dismissRequest: dismissRequest,
                     swipeState: swipeState,
-                    onDismiss: cardDismissed,
+                    onCommit: cardCommitted,
+                    onFlightFinished: cardFlightFinished,
                     onReset: resetButtonTapped
                 )
 
@@ -40,15 +43,28 @@ struct ContentView: View {
         dismissRequest = DismissRequest(direction: direction)
     }
 
-    private func cardDismissed(_ direction: SwipeDirection) {
-        guard !cards.isEmpty else { return }
-        dismissRequest = nil
+    private func cardCommitted(
+        id: DemoCard.ID,
+        direction: SwipeDirection,
+        translation: CGSize
+    ) {
+        guard let card = cards.first, card.id == id else { return }
+        let departure = DepartingCard(
+            card: card,
+            direction: direction,
+            initialTranslation: translation
+        )
 
         withAnimation(CardMotion.deckAdvance) {
+            dismissRequest = nil
             swipeState.interaction = .inactive
-            swipeState.isDeckAdvancing = false
+            departingCards.append(departure)
             _ = cards.removeFirst()
         }
+    }
+
+    private func cardFlightFinished(_ id: DepartingCard.ID) {
+        departingCards.removeAll { $0.id == id }
     }
 
     private func resetButtonTapped() {

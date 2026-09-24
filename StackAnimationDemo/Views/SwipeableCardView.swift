@@ -4,10 +4,9 @@ struct SwipeableCardView: View {
     let card: DemoCard
     let isTopCard: Bool
     let stackPosition: Int
-    let containerSize: CGSize
     let dismissRequest: DismissRequest?
     let swipeState: SwipeInteractionState
-    let onDismiss: (SwipeDirection) -> Void
+    let onCommit: (SwipeDirection, CGSize) -> Void
 
     @GestureState private var isDragging = false
     @State private var translation: CGSize = .zero
@@ -111,36 +110,7 @@ struct SwipeableCardView: View {
 
     private func dismiss(_ direction: SwipeDirection) {
         guard isTopCard, !isDismissing else { return }
-        let destination = dismissalDestination(for: direction)
-
-        withAnimation(CardMotion.dismiss, completionCriteria: .removed) {
-            isDismissing = true
-            swipeState.interaction = SwipeInteraction(direction: direction, progress: 1)
-            swipeState.isDeckAdvancing = true
-            translation = destination
-        } completion: {
-            onDismiss(direction)
-        }
-    }
-
-    private func dismissalDestination(for direction: SwipeDirection) -> CGSize {
-        // Travel far enough to clear the card while keeping the throw proportional to its size.
-        switch direction {
-        case .left:
-            return CGSize(
-                width: -max(containerSize.width * 1.45, abs(translation.width) + containerSize.width),
-                height: 80
-            )
-        case .right:
-            return CGSize(
-                width: max(containerSize.width * 1.45, abs(translation.width) + containerSize.width),
-                height: 80
-            )
-        case .up:
-            return CGSize(
-                width: translation.width,
-                height: -max(containerSize.height * 1.35, abs(translation.height) + containerSize.height)
-            )
-        }
+        isDismissing = true
+        onCommit(direction, translation)
     }
 }
