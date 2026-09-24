@@ -12,12 +12,17 @@ struct CardStackDepthModifier: ViewModifier {
             .scaleEffect(1 - depth * 0.045)
             .offset(y: depth * 17)
             .opacity(max(0.55, 1 - Double(depth) * 0.12))
+            .animation(
+                CardMotion.overlappingDeckAdvance(reduceMotion: reduceMotion),
+                value: swipeState.isDeckAdvancing
+            )
     }
 
     private var depth: CGFloat {
         guard position > 0, !reduceMotion else { return CGFloat(position) }
-        // The next card responds to the drag but keeps most of its rise for the handoff.
-        return max(0, CGFloat(position) - swipeState.interaction.progress * 0.25)
+        // Anticipate the drag, then finish the rise while the front card exits.
+        let advance = swipeState.isDeckAdvancing ? 1 : swipeState.interaction.progress * 0.25
+        return max(0, CGFloat(position) - advance)
     }
 
 }

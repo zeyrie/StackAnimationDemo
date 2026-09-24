@@ -118,6 +118,7 @@ struct SwipeableCardView: View {
         withAnimation(CardMotion.dismiss(reduceMotion: reduceMotion), completionCriteria: .removed) {
             isDismissing = true
             swipeState.interaction = SwipeInteraction(direction: direction, progress: 1)
+            swipeState.isDeckAdvancing = true
             if !reduceMotion {
                 translation = destination
             }

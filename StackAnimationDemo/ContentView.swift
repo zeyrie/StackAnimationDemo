@@ -46,6 +46,7 @@ struct ContentView: View {
 
         withAnimation(CardMotion.deckAdvance(reduceMotion: reduceMotion)) {
             swipeState.interaction = .inactive
+            swipeState.isDeckAdvancing = false
             _ = cards.removeFirst()
         }
     }

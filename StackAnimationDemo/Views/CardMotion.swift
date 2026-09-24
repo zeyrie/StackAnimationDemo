@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Shared timing keeps the card, deck, and controls in the same animation transaction.
+/// Timing for the distinct phases of card and control motion.
 enum CardMotion {
     static func dismiss(reduceMotion: Bool) -> Animation {
         reduceMotion ? .easeOut(duration: 0.18) : .timingCurve(0.28, 0.1, 0.58, 1, duration: 0.46)
@@ -8,6 +8,10 @@ enum CardMotion {
 
     static func cardReturn(reduceMotion: Bool) -> Animation {
         reduceMotion ? .easeOut(duration: 0.18) : .spring(duration: 0.5, bounce: 0.2)
+    }
+
+    static func overlappingDeckAdvance(reduceMotion: Bool) -> Animation {
+        reduceMotion ? .easeOut(duration: 0.18) : .spring(duration: 0.36, bounce: 0.15).delay(0.08)
     }
 
     static func deckAdvance(reduceMotion: Bool) -> Animation {
