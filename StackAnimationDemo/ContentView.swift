@@ -24,7 +24,7 @@ struct ContentView: View {
                 )
 
                 CardControlsView(
-                    isDisabled: cards.isEmpty || dismissRequest != nil,
+                    isDisabled: cards.isEmpty,
                     swipeState: swipeState,
                     onPass: { requestDismissal(.left) },
                     onSave: { requestDismissal(.up) },
