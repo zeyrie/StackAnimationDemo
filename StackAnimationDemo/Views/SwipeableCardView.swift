@@ -9,7 +9,6 @@ struct SwipeableCardView: View {
     let swipeState: SwipeInteractionState
     let onDismiss: (SwipeDirection) -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @GestureState private var isDragging = false
     @State private var translation: CGSize = .zero
     @State private var isDismissing = false
@@ -22,7 +21,6 @@ struct SwipeableCardView: View {
             .modifier(CardStackDepthModifier(position: stackPosition, swipeState: swipeState))
             .rotationEffect(.degrees(rotation))
             .offset(translation)
-            .opacity(isDismissing && reduceMotion ? 0 : 1)
             .allowsHitTesting(isTopCard && !isDismissing)
             .accessibilityHidden(!isTopCard || isDismissing)
             .gesture(isTopCard ? dragGesture : nil)
@@ -45,7 +43,7 @@ struct SwipeableCardView: View {
     }
 
     private var rotation: Double {
-        reduceMotion ? 0 : Double(min(18, max(-18, translation.width / 22)))
+        Double(min(18, max(-18, translation.width / 22)))
     }
 
     private func dragChanged(_ value: DragGesture.Value) {
@@ -80,7 +78,7 @@ struct SwipeableCardView: View {
     }
 
     private func returnToRest() {
-        withAnimation(CardMotion.cardReturn(reduceMotion: reduceMotion)) {
+        withAnimation(CardMotion.cardReturn) {
             translation = .zero
             swipeState.interaction = .inactive
         }
@@ -115,13 +113,11 @@ struct SwipeableCardView: View {
         guard isTopCard, !isDismissing else { return }
         let destination = dismissalDestination(for: direction)
 
-        withAnimation(CardMotion.dismiss(reduceMotion: reduceMotion), completionCriteria: .removed) {
+        withAnimation(CardMotion.dismiss, completionCriteria: .removed) {
             isDismissing = true
             swipeState.interaction = SwipeInteraction(direction: direction, progress: 1)
             swipeState.isDeckAdvancing = true
-            if !reduceMotion {
-                translation = destination
-            }
+            translation = destination
         } completion: {
             onDismiss(direction)
         }

@@ -7,14 +7,12 @@ struct CardStackView: View {
     let onDismiss: (SwipeDirection) -> Void
     let onReset: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
     var body: some View {
         GeometryReader { proxy in
             ZStack {
                 if cards.isEmpty {
                     EmptyDeckView(onReset: onReset)
-                        .transition(reduceMotion ? .opacity : .scale(scale: 0.96).combined(with: .opacity))
+                        .transition(.scale(scale: 0.96).combined(with: .opacity))
                 } else {
                     ForEach(
                         Array(cards.prefix(4).enumerated()).reversed(),

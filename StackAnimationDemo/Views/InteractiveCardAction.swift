@@ -9,17 +9,16 @@ struct InteractiveCardAction: View {
     let distanceToCenter: CGFloat
     let action: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.layoutDirection) private var layoutDirection
 
     var body: some View {
         CardActionButton(title: title, systemImage: systemImage, tint: tint, action: action)
-            .scaleEffect(reduceMotion ? 1 : scale)
-            .offset(x: reduceMotion ? 0 : horizontalOffset, y: reduceMotion ? 0 : -10 * selectedProgress)
+            .scaleEffect(scale)
+            .offset(x: horizontalOffset, y: -10 * selectedProgress)
             .opacity(opacity)
             .shadow(color: tint.opacity(Double(selectedProgress) * 0.3), radius: 12 * selectedProgress)
             .animation(
-                CardMotion.changeDirection(reduceMotion: reduceMotion),
+                CardMotion.changeDirection,
                 value: swipeState.interaction.direction
             )
             .zIndex(isSelected ? 1 : 0)
